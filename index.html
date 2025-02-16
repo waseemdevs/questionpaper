@@ -9,13 +9,7 @@
     <header>
         <div class="container">
             <h1>Quiz Website</h1>
-            <nav>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </nav>
+
         </div>
     </header>
     <div class="container">
@@ -34,3 +28,210 @@
     </div>
 </body>
 </html>
+<script>
+    const questions = [
+        {
+            question: "What is the capital of France?",
+            options: ["A. Berlin", "B. Madrid", "C. Paris", "D. Rome"],
+            answer: "C"
+        },
+        {
+            question: "Which planet is known as the Red Planet?",
+            options: ["A. Earth", "B. Mars", "C. Jupiter", "D. Venus"],
+            answer: "B"
+        },
+        {
+            question: "Who wrote the play 'Romeo and Juliet'?",
+            options: ["A. Charles Dickens", "B. William Shakespeare", "C. Mark Twain", "D. Jane Austen"],
+            answer: "B"
+        },
+        {
+            question: "What is the largest mammal in the world?",
+            options: ["A. Elephant", "B. Blue Whale", "C. Giraffe", "D. Polar Bear"],
+            answer: "B"
+        },
+        {
+            question: "Which element has the chemical symbol 'O'?",
+            options: ["A. Gold", "B. Oxygen", "C. Silver", "D. Iron"],
+            answer: "B"
+        },
+        {
+            question: "What is the tallest mountain in the world?",
+            options: ["A. K2", "B. Mount Everest", "C. Mount Kilimanjaro", "D. Mount Elbrus"],
+            answer: "B"
+        }
+    ];
+
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('submit-btn')) {
+            event.preventDefault();
+            let score = 0;
+            questions.forEach((question, index) => {
+                const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selectedOption && selectedOption.value === question.answer) {
+                    score++;
+                }
+            });
+            showResults(score);
+        }
+    });
+
+    function loadQuestions() {
+        const container = document.querySelector('.quiz-container');
+        container.innerHTML = '';
+        questions.forEach((question, index) => {
+            const questionElement = document.createElement('div');
+            questionElement.classList.add('question');
+            questionElement.innerHTML = `
+                <p>${question.question}</p>
+                <ul class="options">
+                    ${question.options.map(option => `
+                        <li><input type="radio" name="q${index}" value="${option.charAt(0)}"> ${option}</li>
+                    `).join('')}
+                </ul>
+            `;
+            container.appendChild(questionElement);
+        });
+        const submitButton = document.createElement('a');
+        submitButton.href = "#";
+        submitButton.classList.add('submit-btn');
+        submitButton.textContent = "Submit";
+        container.appendChild(submitButton);
+    }
+
+    function showResults(score) {
+        const container = document.querySelector('.quiz-container');
+        container.innerHTML = `
+            <h2>Results</h2>
+            <p>Your score is: ${score} out of ${questions.length}</p>
+            <p>Correct answers:</p>
+            <ul>
+                ${questions.map(q => `<li>${q.question} - ${q.answer}</li>`).join('')}
+            </ul>
+        `;
+    }
+
+    loadQuestions();
+</script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #3498db;
+        color: white;
+        padding: 1rem 0;
+        text-align: center;
+    }
+
+    .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+    }
+
+    .quiz-container {
+        background-color: #fff;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: left;
+        max-width: 700px;
+        margin: 20px auto;
+    }
+
+    .question {
+        margin-bottom: 20px;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .options {
+        list-style: none;
+        padding: 0;
+    }
+
+    .options li {
+        margin-bottom: 10px;
+    }
+
+    .options li label {
+        display: block;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .options li label:hover {
+        background-color: #eee;
+    }
+
+    .options li input[type="radio"] {
+        margin-right: 8px;
+    }
+
+    .submit-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #3498db;
+        color: white;
+        text-align: center;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        margin-top: 20px;
+    }
+
+    .submit-btn:hover {
+        background-color: #2980b9;
+    }
+
+    #results {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #e74c3c;
+        color: white;
+        border-radius: 8px;
+    }
+
+    #results h2 {
+        color: white;
+    }
+
+    #results p {
+        font-size: 1.2em;
+    }
+</style>
+<script>
+    function showResults(score) {
+        const container = document.querySelector('.quiz-container');
+        container.innerHTML = `
+            <h2>Results</h2>
+            <p>Your score is: ${score} out of ${questions.length}</p>
+            <p>Correct answers:</p>
+            <ul>
+                ${questions.map(q => `<li>${q.question} - ${q.answer}</li>`).join('')}
+            </ul>
+            <p>Wrong answers:</p>
+            <ul>
+                ${questions.map((q, index) => {
+                    const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+                    if (selectedOption && selectedOption.value !== q.answer) {
+                        return `<li>${q.question} - Your answer: ${selectedOption.value}, Correct answer: ${q.answer}</li>`;
+                    }
+                    return '';
+                }).join('')}
+            </ul>
+        `;
+    }
+</script>
+<link rel="stylesheet" href="style.css">
